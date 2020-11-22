@@ -32,6 +32,6 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe())
     // app.useGlobalFilters(new AllExceptionsFilter());
-    await app.listen(4000)
+    await app.listen(parseInt(process.env.API_PORT, 10) || 3000)
 }
 bootstrap()
