@@ -25,7 +25,7 @@ async function bootstrap() {
         .addBearerAuth()
         .build()
     const document = SwaggerModule.createDocument(app, options)
-    SwaggerModule.setup("doc", app, document)
+    SwaggerModule.setup(`${process.env.API_PREFIX}/doc`, app, document)
 
     app.enableCors()
     app.setGlobalPrefix(process.env.API_PREFIX)
