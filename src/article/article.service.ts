@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common"
 import { Tag } from "src/tag/tag.entity"
 import { User } from "src/user/user.entity"
 import { Connection, FindManyOptions, FindOneOptions } from "typeorm"
-import { ArticleCreateDto } from "./article.dto"
+import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
 import { Article } from "./article.entity"
 
 @Injectable()
@@ -65,6 +65,29 @@ export class ArticleService {
             a.tags = tags
             const result = await manager.save(Article, a)
             return result ? result.id : 0
+        })
+    }
+
+    async bindTag(
+        articleId: number,
+        dto: ArticleBindTagDto,
+        authed: boolean = true,
+    ): Promise<boolean> {
+        const one = await this.findOne(articleId, authed)
+        if (!one) return false
+        return await this.connection.manager.transaction(async (manager) => {
+            const tags: Tag[] = []
+            for (const val of one.tags) {
+                await manager.delete(Tag, val)
+            }
+            for (const val of dto.tags) {
+                const tag: Tag = new Tag(val)
+                await manager.save(Tag, tag)
+                tags.push(tag)
+            }
+            one.tags = tags
+            await manager.save(Article, one)
+            return true
         })
     }
 }

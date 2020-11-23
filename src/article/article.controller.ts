@@ -18,7 +18,7 @@ import {
 import { User } from "src/user/user.entity"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
-import { ArticleCreateDto } from "./article.dto"
+import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
 import { Article } from "./article.entity"
 import { ArticleService } from "./article.service"
 
@@ -76,5 +76,13 @@ export class ArticleController {
         const insertId = await this.articleService.insertOne(id, dto)
         if (insertId === 0) throw new BadRequestException()
         return new InsertResponse(insertId)
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
+    @Post(":id/bind")
+    async bindTag(@Param("id") id: number, @Body() dto: ArticleBindTagDto) {
+        const ok = await this.articleService.bindTag(id, dto)
+        if (!ok) throw new NotFoundException()
     }
 }

@@ -13,7 +13,7 @@ export class Tag {
     id: number
 
     @ApiProperty()
-    @Column({ length: 32, unique: true })
+    @Column({ length: 32 })
     name: string
 
     @ManyToOne(() => Article, (a) => a.tags)
