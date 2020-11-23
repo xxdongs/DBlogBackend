@@ -1,4 +1,4 @@
-import { IsNotEmpty, ArrayMinSize, ArrayNotEmpty } from "class-validator"
+import { IsNotEmpty, ArrayMinSize } from "class-validator"
 import { ApiProperty } from "@nestjs/swagger"
 
 export class ArticleCreateDto {
