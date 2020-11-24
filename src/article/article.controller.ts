@@ -41,13 +41,13 @@ export class ArticleController {
         @Query("order") order = this.ORDER,
         @Query("order_name") orderName = this.ORDER_NAME,
     ): Promise<[Article[], number]> {
-        const id = req.user ? (req.user as User).id : 0
+        let authed = req.user ? true : false
         return await this.articleService.find(
-            id,
             limit,
             offset,
             order,
             orderName,
+            authed,
         )
     }
 
@@ -69,11 +69,9 @@ export class ArticleController {
     @UseGuards(new JwtAuthGuard())
     @Post()
     async createArticle(
-        @Request() req,
         @Body() dto: ArticleCreateDto,
     ): Promise<InsertResponse> {
-        const id = (req.user as User).id
-        const insertId = await this.articleService.insertOne(id, dto)
+        const insertId = await this.articleService.insertOne(dto)
         if (insertId === 0) throw new BadRequestException()
         return new InsertResponse(insertId)
     }

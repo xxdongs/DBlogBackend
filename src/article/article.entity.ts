@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { Comment } from "src/comment/comment.entity"
 import { Tag } from "src/tag/tag.entity"
-import { User } from "src/user/user.entity"
 import {
     Entity,
     Column,
@@ -9,7 +8,6 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     OneToMany,
-    ManyToOne,
 } from "typeorm"
 
 @Entity()
@@ -35,9 +33,6 @@ export class Article {
 
     @OneToMany(() => Comment, (c) => c.article)
     comments: Comment[]
-
-    @ManyToOne(() => User, (user) => user.article)
-    user: User
 
     @ApiProperty()
     @CreateDateColumn({ type: "timestamp" })

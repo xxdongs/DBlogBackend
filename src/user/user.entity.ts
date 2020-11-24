@@ -1,12 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { Article } from "src/article/article.entity"
-import { Message } from "src/message/message.entity"
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    OneToMany,
 } from "typeorm"
 import { UserGroup } from "../util/user.group"
 
@@ -45,12 +42,6 @@ export class User {
     @ApiProperty()
     @Column({ type: "tinytext", nullable: true })
     summary: string
-
-    @OneToMany(() => Article, (a) => a.user)
-    article: Article[]
-
-    @OneToMany(() => Message, (m) => m.user)
-    messages: Message[]
 
     @ApiProperty()
     @CreateDateColumn({ type: "timestamp" })
