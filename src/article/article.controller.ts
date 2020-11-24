@@ -15,7 +15,6 @@ import {
     ApiCreatedResponse,
     ApiOkResponse,
 } from "@nestjs/swagger"
-import { User } from "src/user/user.entity"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
 import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
@@ -38,15 +37,17 @@ export class ArticleController {
         @Request() req,
         @Query("limit") limit = this.LIMIT,
         @Query("offset") offset = this.OFFSET,
-        @Query("order") order = this.ORDER,
+        @Query("order") order: "ASC" | "DESC" = "DESC",
+        @Query("tag") tag,
         @Query("order_name") orderName = this.ORDER_NAME,
-    ): Promise<[Article[], number]> {
+    ): Promise<Article[]> {
         let authed = req.user ? true : false
         return await this.articleService.find(
             limit,
             offset,
             order,
             orderName,
+            tag,
             authed,
         )
     }

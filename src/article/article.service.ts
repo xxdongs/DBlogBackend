@@ -11,23 +11,23 @@ export class ArticleService {
     async find(
         limit: number,
         offset: number,
-        order: string,
+        order: "ASC" | "DESC",
         orderName: string,
+        tag: string,
         authed: boolean = false,
-    ): Promise<[Article[], number]> {
-        const options: FindManyOptions<Article> = {
-            select: ["id", "title", "open", "create"],
-            relations: ["comments", "tags"],
-            skip: offset,
-            take: limit,
-            order: {
-                [orderName]: order,
-            },
-        }
+    ): Promise<Article[]> {
+        const builder = await this.connection
+            .createQueryBuilder(Article, "article")
+            .leftJoinAndSelect("article.tags", "tag")
+            .leftJoinAndSelect("article.comments", "com")
+            .offset(offset)
+            .limit(limit)
+            .orderBy(`article.${orderName}`, order)
         if (!authed) {
-            options.where = [{ open: true }]
+            builder.andWhere("article.open = :open", { open: 1 })
         }
-        return this.connection.manager.findAndCount(Article, options)
+        if (tag) builder.andWhere("tag.name = :tag", { tag })
+        return builder.getMany()
     }
 
     async findOne(id: number, authed: boolean = false): Promise<Article> {
