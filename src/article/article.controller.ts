@@ -38,7 +38,8 @@ export class ArticleController {
         @Query("limit") limit = this.LIMIT,
         @Query("offset") offset = this.OFFSET,
         @Query("order") order: "ASC" | "DESC" = "DESC",
-        @Query("tag") tag,
+        @Query("tag") tag: string,
+        @Query("key") key: string,
         @Query("order_name") orderName = this.ORDER_NAME,
     ): Promise<Article[]> {
         let authed = req.user ? true : false
@@ -48,6 +49,7 @@ export class ArticleController {
             order,
             orderName,
             tag,
+            key,
             authed,
         )
     }

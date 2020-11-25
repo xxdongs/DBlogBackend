@@ -14,6 +14,7 @@ export class ArticleService {
         order: "ASC" | "DESC",
         orderName: string,
         tag: string,
+        key: string,
         authed: boolean = false,
     ): Promise<Article[]> {
         const builder = await this.connection
@@ -23,10 +24,10 @@ export class ArticleService {
             .offset(offset)
             .limit(limit)
             .orderBy(`article.${orderName}`, order)
-        if (!authed) {
-            builder.andWhere("article.open = :open", { open: 1 })
-        }
+        if (!authed) builder.andWhere("article.open = :open", { open: 1 })
         if (tag) builder.andWhere("tag.name = :tag", { tag })
+        if (key)
+            builder.andWhere("article.title like :key", { key: `%${key}%` })
         return builder.getMany()
     }
 
