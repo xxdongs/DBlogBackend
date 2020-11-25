@@ -15,6 +15,7 @@ import {
     ApiCreatedResponse,
     ApiOkResponse,
 } from "@nestjs/swagger"
+import { Constant } from "src/util/constant"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
 import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
@@ -25,23 +26,21 @@ import { ArticleService } from "./article.service"
 export class ArticleController {
     constructor(private readonly articleService: ArticleService) {}
 
-    LIMIT = 3
-    OFFSET = 0
-    ORDER = "DESC"
-    ORDER_NAME = "create"
-
     @ApiOkResponse({ type: [Article] })
     @UseGuards(new JwtAuthGuard(false))
     @Get()
     async getArticle(
         @Request() req,
-        @Query("limit") limit = this.LIMIT,
-        @Query("offset") offset = this.OFFSET,
+        @Query("limit") limit = 10,
+        @Query("offset") offset = 0,
         @Query("order") order: "ASC" | "DESC" = "DESC",
         @Query("tag") tag: string,
         @Query("key") key: string,
-        @Query("order_name") orderName = this.ORDER_NAME,
+        @Query("order_name") orderName = "create",
     ): Promise<Article[]> {
+        if (!Constant.ORDERS.includes(order)) {
+            throw new BadRequestException()
+        }
         let authed = req.user ? true : false
         return await this.articleService.find(
             limit,
