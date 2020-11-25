@@ -8,7 +8,6 @@ export class Tag {
         this.name = name
     }
 
-    @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number
 
