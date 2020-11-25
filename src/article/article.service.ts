@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { Tag } from "src/tag/tag.entity"
-import { Connection, FindManyOptions, FindOneOptions } from "typeorm"
+import { Connection, FindOneOptions } from "typeorm"
 import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
 import { Article } from "./article.entity"
 
@@ -20,7 +20,6 @@ export class ArticleService {
         const builder = await this.connection
             .createQueryBuilder(Article, "article")
             .leftJoinAndSelect("article.tags", "tag")
-            .leftJoinAndSelect("article.comments", "com")
             .offset(offset)
             .limit(limit)
             .orderBy(`article.${orderName}`, order)
