@@ -9,6 +9,8 @@ import {
     BadRequestException,
     Param,
     NotFoundException,
+    Put,
+    Delete,
 } from "@nestjs/common"
 import {
     ApiBearerAuth,
@@ -18,7 +20,11 @@ import {
 import { Constant } from "src/util/constant"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
-import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
+import {
+    ArticleBindTagDto,
+    ArticleCreateDto,
+    ArticleUpdateDto,
+} from "./article.dto"
 import { Article } from "./article.entity"
 import { ArticleService } from "./article.service"
 
@@ -67,13 +73,31 @@ export class ArticleController {
     }
 
     @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
+    @Delete(":id")
+    async delArticle(@Param("id") id: number) {
+        const ok = await this.articleService.deleteOne(id)
+        if (!ok) throw new NotFoundException()
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
+    @Put(":id")
+    async updateArticle(
+        @Param("id") id: number,
+        @Body() dto: ArticleUpdateDto,
+    ) {
+        await this.articleService.insertOrUpdateOne(dto, id)
+    }
+
+    @ApiBearerAuth()
     @ApiCreatedResponse({ type: InsertResponse })
     @UseGuards(new JwtAuthGuard())
     @Post()
     async createArticle(
         @Body() dto: ArticleCreateDto,
     ): Promise<InsertResponse> {
-        const insertId = await this.articleService.insertOne(dto)
+        const insertId = await this.articleService.insertOrUpdateOne(dto)
         if (insertId === 0) throw new BadRequestException()
         return new InsertResponse(insertId)
     }

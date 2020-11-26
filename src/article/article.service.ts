@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common"
 import { Tag } from "src/tag/tag.entity"
 import { Connection, FindOneOptions } from "typeorm"
-import { ArticleBindTagDto, ArticleCreateDto } from "./article.dto"
+import {
+    ArticleBindTagDto,
+    ArticleCreateDto,
+    ArticleUpdateDto,
+} from "./article.dto"
 import { Article } from "./article.entity"
 
 @Injectable()
@@ -40,12 +44,17 @@ export class ArticleService {
         return await this.connection.manager.findOne(Article, options)
     }
 
-    async insertOne(dto: ArticleCreateDto): Promise<number> {
+    async insertOrUpdateOne(
+        dto: ArticleCreateDto | ArticleUpdateDto,
+        articleId: number = 0,
+    ): Promise<number> {
         return await this.connection.transaction(async (manager) => {
-            const a = new Article()
-            a.title = dto.title
-            a.content = dto.content
-            a.open = dto.open
+            let a: Article
+            if (articleId > 0) a = await manager.findOne(Article, articleId)
+            else a = new Article()
+            if (a.title) a.title = dto.title
+            if (a.content) a.content = dto.content
+            if (a.open !== undefined) a.open = dto.open
             const tags: Tag[] = []
             // attach tags to article
             if (Array.isArray(dto.tags) && dto.tags.length > 0) {
@@ -59,6 +68,11 @@ export class ArticleService {
             const result = await manager.save(Article, a)
             return result ? result.id : 0
         })
+    }
+
+    async deleteOne(id: number): Promise<boolean> {
+        const result = await this.connection.manager.delete(Article, id)
+        return result.affected > 0
     }
 
     async bindTag(

@@ -1,4 +1,4 @@
-import { IsNotEmpty, ArrayMinSize } from "class-validator"
+import { IsNotEmpty, ArrayMinSize, IsDefined } from "class-validator"
 import { ApiProperty } from "@nestjs/swagger"
 
 export class ArticleCreateDto {
@@ -14,6 +14,21 @@ export class ArticleCreateDto {
     readonly open: boolean
 
     @ApiProperty({ type: [String] })
+    readonly tags?: string[]
+}
+
+export class ArticleUpdateDto {
+    @ApiProperty()
+    readonly title: string
+
+    @ApiProperty()
+    readonly content: string
+
+    @ApiProperty()
+    readonly open: boolean
+
+    @ApiProperty({ type: [String] })
+    @IsDefined()
     readonly tags?: string[]
 }
 
