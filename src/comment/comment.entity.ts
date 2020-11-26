@@ -15,8 +15,8 @@ export class Comment {
     id: number
 
     @ApiProperty()
-    @Column({ length: 16, unique: true })
-    name: string
+    @Column({ length: 16, unique: true, nullable: false })
+    content: string
 
     @ApiProperty()
     @ManyToOne(() => Article, (a) => a.comments)
