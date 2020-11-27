@@ -17,7 +17,7 @@ import {
     ApiCreatedResponse,
     ApiOkResponse,
 } from "@nestjs/swagger"
-import { Constant } from "src/util/constant"
+import { Constant, OrderType } from "src/util/constant"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
 import {
@@ -39,7 +39,7 @@ export class ArticleController {
         @Request() req,
         @Query("limit") limit = 10,
         @Query("offset") offset = 0,
-        @Query("order") order: "ASC" | "DESC" = "DESC",
+        @Query("order") order: OrderType = "DESC",
         @Query("tag") tag: string,
         @Query("key") key: string,
         @Query("order_name") orderName = "create",

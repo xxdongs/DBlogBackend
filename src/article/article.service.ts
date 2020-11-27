@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { Tag } from "src/tag/tag.entity"
+import { OrderType } from "src/util/constant"
 import { Connection, FindOneOptions } from "typeorm"
 import {
     ArticleBindTagDto,
@@ -15,7 +16,7 @@ export class ArticleService {
     async find(
         limit: number,
         offset: number,
-        order: "ASC" | "DESC",
+        order: OrderType,
         orderName: string,
         tag: string,
         key: string,

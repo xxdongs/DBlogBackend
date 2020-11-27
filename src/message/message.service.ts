@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common"
+import { OrderType } from "src/util/constant"
 import { Connection } from "typeorm"
 import { MessageCreateDto } from "./message.dto"
 import { Message } from "./message.entity"
@@ -18,7 +19,7 @@ export class MessageService {
     async find(
         limit: number,
         offset: number,
-        order: "ASC" | "DESC",
+        order: OrderType,
         orderName: string,
     ): Promise<Message[]> {
         const builder = await this.connection
