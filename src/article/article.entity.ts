@@ -25,8 +25,25 @@ export class Article {
     content: string
 
     @ApiProperty()
-    @Column({ default: true })
+    @Column({
+        default: true,
+        comment: "Whether the article is opened to everyone.",
+    })
     open: boolean
+
+    @ApiProperty()
+    @Column({
+        default: 0,
+        comment: "How many times that people liked this article.",
+    })
+    liked: number
+
+    @ApiProperty()
+    @Column({
+        default: 0,
+        comment: "How many times that people read this article.",
+    })
+    read: number
 
     @OneToMany(() => Tag, (tag) => tag.article)
     tags: Tag[]

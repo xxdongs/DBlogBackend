@@ -75,6 +75,22 @@ export class ArticleService {
         return result.affected > 0
     }
 
+    async count(id: number, type: number): Promise<boolean> {
+        let column: string
+        if (type === 1) column = "read"
+        else if (type === 2) column = "liked"
+        else return false
+        await this.connection
+            .createQueryBuilder()
+            .update(Article)
+            .set({
+                [column]: () => `${column} + 1`,
+            })
+            .where("id = :id", { id })
+            .execute()
+        return true
+    }
+
     async bindTag(
         articleId: number,
         dto: ArticleBindTagDto,

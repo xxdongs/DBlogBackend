@@ -80,6 +80,12 @@ export class ArticleController {
         if (!ok) throw new NotFoundException()
     }
 
+    @Post(":id")
+    async counting(@Param("id") id: number, @Query("type") type: number) {
+        const ok = await this.articleService.count(id, type)
+        if (!ok) throw new BadRequestException()
+    }
+
     @ApiBearerAuth()
     @UseGuards(new JwtAuthGuard())
     @Put(":id")
