@@ -80,7 +80,7 @@ export class ArticleService {
         if (type === 1) column = "read"
         else if (type === 2) column = "liked"
         else return false
-        await this.connection
+        let result = await this.connection
             .createQueryBuilder()
             .update(Article)
             .set({
@@ -88,7 +88,7 @@ export class ArticleService {
             })
             .where("id = :id", { id })
             .execute()
-        return true
+        return result.affected > 0
     }
 
     async bindTag(
