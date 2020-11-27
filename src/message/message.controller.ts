@@ -3,6 +3,8 @@ import {
     Body,
     Controller,
     Get,
+    NotFoundException,
+    Param,
     Post,
     Query,
     UseGuards,
@@ -23,16 +25,24 @@ export class MessageController {
     ) {}
 
     @Post()
-    async createArticle(@Body() dto: MessageCreateDto) {
+    async createMessage(@Body() dto: MessageCreateDto) {
         let id = await this.messageService.insertOne(dto)
         await this.noticeService.insertOne("MESSAGE", `/message/${id}`)
+    }
+
+    @UseGuards(new JwtAuthGuard())
+    @Get(":id")
+    async getMessage(@Param("id") id: number): Promise<Message> {
+        const msg = await this.messageService.findOne(id)
+        if (!msg) throw new NotFoundException()
+        return msg
     }
 
     @ApiBearerAuth()
     @ApiOkResponse({ type: [Message] })
     @UseGuards(new JwtAuthGuard())
     @Get()
-    async getArticle(
+    async getMessages(
         @Query("limit") limit = 10,
         @Query("offset") offset = 0,
         @Query("order") order: OrderType = "DESC",

@@ -8,6 +8,7 @@ import {
     Request,
     NotFoundException,
     Delete,
+    Get,
 } from "@nestjs/common"
 import { ApiCreatedResponse } from "@nestjs/swagger"
 import { NoticeService } from "src/notice/notice.service"
@@ -37,7 +38,7 @@ export class CommentController {
 
     @ApiCreatedResponse({ type: InsertResponse })
     @UseGuards(new JwtAuthGuard(false))
-    @Post(":id")
+    @Get(":id")
     async getAComment(
         @Request() req,
         @Param("id") id: number,

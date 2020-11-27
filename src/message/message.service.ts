@@ -29,4 +29,8 @@ export class MessageService {
             .orderBy(`message.${orderName}`, order)
         return builder.getMany()
     }
+
+    async findOne(id: number): Promise<Message> {
+        return this.connection.manager.findOne(Message, id)
+    }
 }
