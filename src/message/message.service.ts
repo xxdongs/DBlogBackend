@@ -12,7 +12,7 @@ export class MessageService {
         const msg = new Message()
         msg.content = dto.content
         msg.contact = dto.contact
-        let result = await this.connection.manager.save(Message, msg)
+        const result = await this.connection.manager.save(Message, msg)
         return result.id
     }
 

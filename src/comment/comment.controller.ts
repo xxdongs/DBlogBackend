@@ -43,7 +43,7 @@ export class CommentController {
         @Request() req,
         @Param("id") id: number,
     ): Promise<Comment> {
-        let authed = req.user ? true : false
+        const authed = req.user ? true : false
         const comm = await this.commentService.findOne(id, authed)
         if (!comm) throw new NotFoundException()
         return comm

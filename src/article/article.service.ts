@@ -20,7 +20,7 @@ export class ArticleService {
         orderName: string,
         tag: string,
         key: string,
-        authed: boolean = false,
+        authed = false,
     ): Promise<Article[]> {
         const builder = await this.connection
             .createQueryBuilder(Article, "article")
@@ -35,7 +35,7 @@ export class ArticleService {
         return builder.getMany()
     }
 
-    async findOne(id: number, authed: boolean = false): Promise<Article> {
+    async findOne(id: number, authed = false): Promise<Article> {
         const options: FindOneOptions<Article> = {
             select: ["id", "title", "content", "open", "create", "update"],
             relations: ["comments", "tags"],
@@ -47,7 +47,7 @@ export class ArticleService {
 
     async insertOrUpdateOne(
         dto: ArticleCreateDto | ArticleUpdateDto,
-        articleId: number = 0,
+        articleId = 0,
     ): Promise<number> {
         return await this.connection.transaction(async (manager) => {
             let a: Article
@@ -81,7 +81,7 @@ export class ArticleService {
         if (type === 1) column = "read"
         else if (type === 2) column = "liked"
         else return false
-        let result = await this.connection
+        const result = await this.connection
             .createQueryBuilder()
             .update(Article)
             .set({
@@ -95,7 +95,7 @@ export class ArticleService {
     async bindTag(
         articleId: number,
         dto: ArticleBindTagDto,
-        authed: boolean = true,
+        authed = true,
     ): Promise<boolean> {
         const one = await this.findOne(articleId, authed)
         if (!one) return false

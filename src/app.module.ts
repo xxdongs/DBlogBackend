@@ -10,7 +10,7 @@ import { TagModule } from "./tag/tag.module"
 import { CommentModule } from "./comment/comment.module"
 import { MessageModule } from "./message/message.module"
 import { ConfigModule } from "@nestjs/config"
-import { NoticeModule } from './notice/notice.module';
+import { NoticeModule } from "./notice/notice.module"
 
 @Module({
     imports: [

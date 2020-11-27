@@ -21,7 +21,7 @@ export class CommentService {
         return result ? result.id : 0
     }
 
-    async findOne(id: number, authed: boolean = false): Promise<Comment> {
+    async findOne(id: number, authed = false): Promise<Comment> {
         const comm = await this.connection.manager.findOne(Comment, id)
         if (!authed && comm) {
             if (!comm.article.open) return null

@@ -26,7 +26,7 @@ export class MessageController {
 
     @Post()
     async createMessage(@Body() dto: MessageCreateDto) {
-        let id = await this.messageService.insertOne(dto)
+        const id = await this.messageService.insertOne(dto)
         await this.noticeService.insertOne("MESSAGE", `/message/${id}`)
     }
 

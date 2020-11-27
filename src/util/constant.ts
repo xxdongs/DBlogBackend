@@ -1,5 +1,3 @@
-import { type } from "os"
-
 export class Constant {
     static ORDERS = ["ASC", "DESC"]
 }

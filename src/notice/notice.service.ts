@@ -9,7 +9,7 @@ export class NoticeService {
 
     async insertOne(type: NoticeType, link: string, ext: string = undefined) {
         if (type === "LIKED" && ext === "1") return
-        let notice: Notice = new Notice()
+        const notice: Notice = new Notice()
         notice.type = type
         notice.link = link
         await this.connection.manager.save(Notice, notice)

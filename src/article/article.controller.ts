@@ -51,7 +51,7 @@ export class ArticleController {
         if (!Constant.ORDERS.includes(order)) {
             throw new BadRequestException()
         }
-        let authed = req.user ? true : false
+        const authed = req.user ? true : false
         return await this.articleService.find(
             limit,
             offset,
@@ -70,7 +70,7 @@ export class ArticleController {
         @Request() req,
         @Param("id") id: number,
     ): Promise<Article> {
-        let authed = req.user ? true : false
+        const authed = req.user ? true : false
         const art = await this.articleService.findOne(id, authed)
         if (!art) throw new NotFoundException()
         return art
