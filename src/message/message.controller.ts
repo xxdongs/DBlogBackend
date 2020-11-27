@@ -8,6 +8,7 @@ import {
     UseGuards,
 } from "@nestjs/common"
 import { ApiBearerAuth, ApiOkResponse } from "@nestjs/swagger"
+import { NoticeService } from "src/notice/notice.service"
 import { Constant, OrderType } from "src/util/constant"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { MessageCreateDto } from "./message.dto"
@@ -16,11 +17,15 @@ import { MessageService } from "./message.service"
 
 @Controller("message")
 export class MessageController {
-    constructor(private readonly messageService: MessageService) {}
+    constructor(
+        private readonly messageService: MessageService,
+        private readonly noticeService: NoticeService,
+    ) {}
 
     @Post()
     async createArticle(@Body() dto: MessageCreateDto) {
-        await this.messageService.insertOne(dto)
+        let id = await this.messageService.insertOne(dto)
+        await this.noticeService.insertOne("MESSAGE", `/message/${id}`)
     }
 
     @ApiBearerAuth()

@@ -8,12 +8,12 @@ import { Message } from "./message.entity"
 export class MessageService {
     constructor(protected connection: Connection) {}
 
-    async insertOne(dto: MessageCreateDto): Promise<boolean> {
+    async insertOne(dto: MessageCreateDto): Promise<number> {
         const msg = new Message()
         msg.content = dto.content
         msg.contact = dto.contact
-        await this.connection.manager.insert(Message, msg)
-        return true
+        let result = await this.connection.manager.save(Message, msg)
+        return result.id
     }
 
     async find(

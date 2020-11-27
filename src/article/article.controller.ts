@@ -17,6 +17,7 @@ import {
     ApiCreatedResponse,
     ApiOkResponse,
 } from "@nestjs/swagger"
+import { NoticeService } from "src/notice/notice.service"
 import { Constant, OrderType } from "src/util/constant"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
@@ -30,7 +31,10 @@ import { ArticleService } from "./article.service"
 
 @Controller("article")
 export class ArticleController {
-    constructor(private readonly articleService: ArticleService) {}
+    constructor(
+        private readonly articleService: ArticleService,
+        private readonly noticeService: NoticeService,
+    ) {}
 
     @ApiOkResponse({ type: [Article] })
     @UseGuards(new JwtAuthGuard(false))
@@ -90,6 +94,11 @@ export class ArticleController {
         if (req.user) return // except admin
         const ok = await this.articleService.count(id, type)
         if (!ok) throw new BadRequestException()
+        await this.noticeService.insertOne(
+            "LIKED",
+            `/article/${id}`,
+            type.toString(),
+        )
     }
 
     @ApiBearerAuth()

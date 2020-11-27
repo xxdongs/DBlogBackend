@@ -10,6 +10,7 @@ import {
     Delete,
 } from "@nestjs/common"
 import { ApiCreatedResponse } from "@nestjs/swagger"
+import { NoticeService } from "src/notice/notice.service"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
 import { InsertResponse } from "src/util/ResMessage"
 import { CommentCreateDto } from "./comment.dto"
@@ -18,7 +19,10 @@ import { CommentService } from "./comment.service"
 
 @Controller("comment")
 export class CommentController {
-    constructor(private readonly commentService: CommentService) {}
+    constructor(
+        private readonly commentService: CommentService,
+        private readonly noticeService: NoticeService,
+    ) {}
 
     @ApiCreatedResponse({ type: InsertResponse })
     @Post()
@@ -27,6 +31,7 @@ export class CommentController {
     ): Promise<InsertResponse> {
         const insertId = await this.commentService.insertOne(dto)
         if (insertId === 0) throw new BadRequestException()
+        await this.noticeService.insertOne("COMMENT", `/comment/${insertId}`)
         return new InsertResponse(insertId)
     }
 

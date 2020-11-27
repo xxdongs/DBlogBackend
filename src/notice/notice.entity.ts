@@ -19,6 +19,14 @@ export class Notice {
 
     @ApiProperty()
     @Column({
+        length: 64,
+        comment:
+            "The address link of this notice, article or message or comment",
+    })
+    link: string
+
+    @ApiProperty()
+    @Column({
         default: false,
         comment: "Whether the notice was read by admin.",
     })
