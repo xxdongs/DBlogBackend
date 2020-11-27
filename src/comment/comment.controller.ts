@@ -39,7 +39,7 @@ export class CommentController {
     @ApiCreatedResponse({ type: InsertResponse })
     @UseGuards(new JwtAuthGuard(false))
     @Get(":id")
-    async getAComment(
+    async getComment(
         @Request() req,
         @Param("id") id: number,
     ): Promise<Comment> {
