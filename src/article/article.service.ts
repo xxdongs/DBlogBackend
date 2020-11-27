@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { Tag } from "src/tag/tag.entity"
+import { TagService } from "src/tag/tag.service"
 import { OrderType } from "src/util/constant"
 import { Connection, FindOneOptions } from "typeorm"
 import {
@@ -11,7 +12,10 @@ import { Article } from "./article.entity"
 
 @Injectable()
 export class ArticleService {
-    constructor(protected connection: Connection) {}
+    constructor(
+        protected connection: Connection,
+        private tagService: TagService,
+    ) {}
 
     async find(
         limit: number,
@@ -56,15 +60,10 @@ export class ArticleService {
             if (a.title) a.title = dto.title
             if (a.content) a.content = dto.content
             if (a.open !== undefined) a.open = dto.open
-            const tags: Tag[] = []
-            // attach tags to article
-            if (Array.isArray(dto.tags) && dto.tags.length > 0) {
-                for (const val of dto.tags) {
-                    const tag: Tag = new Tag(val)
-                    await manager.save(Tag, tag)
-                    tags.push(tag)
-                }
-            }
+            const tags: Tag[] = await this.tagService.insertMany(
+                manager,
+                dto.tags,
+            )
             a.tags = tags
             const result = await manager.save(Article, a)
             return result ? result.id : 0
@@ -100,15 +99,11 @@ export class ArticleService {
         const one = await this.findOne(articleId, authed)
         if (!one) return false
         return await this.connection.manager.transaction(async (manager) => {
-            const tags: Tag[] = []
-            for (const val of one.tags) {
-                await manager.delete(Tag, val)
-            }
-            for (const val of dto.tags) {
-                const tag: Tag = new Tag(val)
-                await manager.save(Tag, tag)
-                tags.push(tag)
-            }
+            await this.tagService.deleteMany(manager, one.tags)
+            const tags: Tag[] = await this.tagService.insertMany(
+                manager,
+                dto.tags,
+            )
             one.tags = tags
             await manager.save(Article, one)
             return true
