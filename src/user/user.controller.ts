@@ -10,6 +10,8 @@ import {
     NotFoundException,
     Put,
     Delete,
+    UseInterceptors,
+    ClassSerializerInterceptor,
 } from "@nestjs/common"
 import { ApiBearerAuth, ApiOkResponse } from "@nestjs/swagger"
 import { JwtAuthGuard } from "src/util/jtw.authguard"
@@ -40,6 +42,7 @@ export class UserController {
         return users
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiOkResponse({
         type: User,
     })
@@ -48,8 +51,7 @@ export class UserController {
     async profile(@Request() req, @Param("id") id: number): Promise<User> {
         const user = await this.userService.findOne({ id })
         if (!user) throw new NotFoundException()
-        const { password, ...result } = user
-        return result as User
+        return user
     }
 
     @ApiBearerAuth()

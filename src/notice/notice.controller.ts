@@ -43,7 +43,7 @@ export class NoticeController {
     @ApiBearerAuth()
     @UseGuards(new JwtAuthGuard())
     @Post("mark")
-    async markReadAll(@Param("id") id: number) {
+    async markReadAll() {
         await this.noticeService.markReadAll()
     }
 }

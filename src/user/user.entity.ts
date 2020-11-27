@@ -5,6 +5,7 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
 } from "typeorm"
+import { Exclude } from "class-transformer"
 import { UserGroup } from "../util/user.group"
 
 @Entity()
@@ -17,6 +18,7 @@ export class User {
     @Column({ length: 32, nullable: true, unique: true })
     username: string
 
+    @Exclude()
     @Column({ length: 32 })
     password: string
 
