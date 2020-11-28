@@ -1,26 +1,26 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from "@nestjs/swagger";
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-} from "typeorm"
+} from "typeorm";
 
 @Entity()
 export class Message {
     @ApiProperty()
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @ApiProperty()
     @Column({ nullable: true, comment: "Contact information" })
-    contact: string
+    contact: string;
 
     @ApiProperty()
     @Column({ type: "text" })
-    content: string
+    content: string;
 
     @ApiProperty()
     @CreateDateColumn({ type: "timestamp" })
-    create: Date
+    create: Date;
 }

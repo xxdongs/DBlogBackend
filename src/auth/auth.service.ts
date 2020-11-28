@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common"
-import { JwtService } from "@nestjs/jwt/dist/jwt.service"
-import { User } from "src/user/user.entity"
-import { UserService } from "src/user/user.service"
-import { md5 } from "src/util/util"
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt/dist/jwt.service";
+import { User } from "src/user/user.entity";
+import { UserService } from "src/user/user.service";
+import { md5 } from "src/util/util";
 
 @Injectable()
 export class AuthService {
@@ -12,17 +12,17 @@ export class AuthService {
     ) {}
 
     async validateUser(username: string, pass: string): Promise<User> {
-        const user = await this.userService.findOne({ username })
+        const user = await this.userService.findOne({ username });
         if (user && user.password === md5(pass)) {
-            return user
+            return user;
         }
-        return null
+        return null;
     }
 
     async login(user: User) {
-        const payload = { id: user.id }
+        const payload = { id: user.id };
         return {
             access_token: `Bearer ${this.jwtService.sign(payload)}`,
-        }
+        };
     }
 }

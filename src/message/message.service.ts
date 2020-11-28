@@ -1,19 +1,19 @@
-import { Injectable } from "@nestjs/common"
-import { OrderType } from "src/util/constant"
-import { Connection } from "typeorm"
-import { MessageCreateDto } from "./message.dto"
-import { Message } from "./message.entity"
+import { Injectable } from "@nestjs/common";
+import { OrderType } from "src/util/constant";
+import { Connection } from "typeorm";
+import { MessageCreateDto } from "./message.dto";
+import { Message } from "./message.entity";
 
 @Injectable()
 export class MessageService {
     constructor(protected connection: Connection) {}
 
     async insertOne(dto: MessageCreateDto): Promise<number> {
-        const msg = new Message()
-        msg.content = dto.content
-        msg.contact = dto.contact
-        const result = await this.connection.manager.save(Message, msg)
-        return result.id
+        const msg = new Message();
+        msg.content = dto.content;
+        msg.contact = dto.contact;
+        const result = await this.connection.manager.save(Message, msg);
+        return result.id;
     }
 
     async find(
@@ -26,11 +26,11 @@ export class MessageService {
             .createQueryBuilder(Message, "message")
             .offset(offset)
             .limit(limit)
-            .orderBy(`message.${orderName}`, order)
-        return builder.getMany()
+            .orderBy(`message.${orderName}`, order);
+        return builder.getMany();
     }
 
     async findOne(id: number): Promise<Message> {
-        return this.connection.manager.findOne(Message, id)
+        return this.connection.manager.findOne(Message, id);
     }
 }

@@ -1,20 +1,20 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { Article } from "src/article/article.entity"
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
+import { ApiProperty } from "@nestjs/swagger";
+import { Article } from "src/article/article.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 @Entity()
 export class Tag {
     constructor(name: string) {
-        this.name = name
+        this.name = name;
     }
 
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @ApiProperty()
     @Column({ length: 32 })
-    name: string
+    name: string;
 
     @ManyToOne(() => Article, (a) => a.tags)
-    article: Article
+    article: Article;
 }

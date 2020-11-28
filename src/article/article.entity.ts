@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { Comment } from "src/comment/comment.entity"
-import { Tag } from "src/tag/tag.entity"
+import { ApiProperty } from "@nestjs/swagger";
+import { Comment } from "src/comment/comment.entity";
+import { Tag } from "src/tag/tag.entity";
 import {
     Entity,
     Column,
@@ -8,54 +8,54 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     OneToMany,
-} from "typeorm"
+} from "typeorm";
 
 @Entity()
 export class Article {
     @ApiProperty()
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @ApiProperty()
     @Column({ length: 32, unique: true })
-    title: string
+    title: string;
 
     @ApiProperty()
     @Column({ type: "text" })
-    content: string
+    content: string;
 
     @ApiProperty()
     @Column({
         default: true,
         comment: "Whether the article is opened to everyone.",
     })
-    open: boolean
+    open: boolean;
 
     @ApiProperty()
     @Column({
         default: 0,
         comment: "How many times that people liked this article.",
     })
-    liked: number
+    liked: number;
 
     @ApiProperty()
     @Column({
         default: 0,
         comment: "How many times that people read this article.",
     })
-    read: number
+    read: number;
 
     @OneToMany(() => Tag, (tag) => tag.article)
-    tags: Tag[]
+    tags: Tag[];
 
     @OneToMany(() => Comment, (c) => c.article)
-    comments: Comment[]
+    comments: Comment[];
 
     @ApiProperty()
     @CreateDateColumn({ type: "timestamp" })
-    create: Date
+    create: Date;
 
     @ApiProperty()
     @UpdateDateColumn({ type: "timestamp" })
-    update: Date
+    update: Date;
 }

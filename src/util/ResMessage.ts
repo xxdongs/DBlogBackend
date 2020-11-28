@@ -13,9 +13,9 @@ export enum ResMessage {
 }
 
 export class InsertResponse {
-    insertId: number
+    insertId: number;
 
     constructor(id: number) {
-        this.insertId = id
+        this.insertId = id;
     }
 }
