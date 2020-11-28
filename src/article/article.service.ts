@@ -57,9 +57,9 @@ export class ArticleService {
             let a: Article;
             if (articleId > 0) a = await manager.findOne(Article, articleId);
             else a = new Article();
-            if (a.title) a.title = dto.title;
-            if (a.content) a.content = dto.content;
-            if (a.open !== undefined) a.open = dto.open;
+            if (dto.title) a.title = dto.title;
+            if (dto.content) a.content = dto.content;
+            if (dto.open !== undefined) a.open = dto.open;
             const tags: Tag[] = await this.tagService.insertMany(
                 manager,
                 dto.tags,
