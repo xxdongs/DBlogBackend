@@ -14,18 +14,7 @@ import { NoticeModule } from "./notice/notice.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forRootAsync({
-            useFactory: () => ({
-                type: "mysql",
-                host: process.env.DB_HOST,
-                port: parseInt(process.env.DB_PORT),
-                username: process.env.DB_USERNAME,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_NAME,
-                entities: [process.env.DB_ENTITIES],
-                synchronize: process.env.DB_SYNC === "true" ? true : false,
-            }),
-        }),
+        TypeOrmModule.forRoot(),
         UserModule,
         AuthModule,
         ArticleModule,
