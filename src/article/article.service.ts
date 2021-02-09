@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { Tag } from "src/tag/tag.entity";
-import { TagService } from "src/tag/tag.service";
-import { OrderType } from "src/util/constant";
-import { Connection, FindOneOptions } from "typeorm";
+import { Injectable } from "@nestjs/common"
+import { Tag } from "src/tag/tag.entity"
+import { TagService } from "src/tag/tag.service"
+import { OrderType } from "src/util/constant"
+import { Connection, FindOneOptions } from "typeorm"
 import {
     ArticleBindTagDto,
     ArticleCreateDto,
     ArticleUpdateDto,
-} from "./article.dto";
-import { Article } from "./article.entity";
+} from "./article.dto"
+import { Article } from "./article.entity"
 
 @Injectable()
 export class ArticleService {
@@ -31,12 +31,12 @@ export class ArticleService {
             .leftJoinAndSelect("article.tags", "tag")
             .offset(offset)
             .limit(limit)
-            .orderBy(`article.${orderName}`, order);
-        if (!authed) builder.andWhere("article.open = :open", { open: 1 });
-        if (tag) builder.andWhere("tag.name = :tag", { tag });
+            .orderBy(`article.${orderName}`, order)
+        if (!authed) builder.andWhere("article.open = :open", { open: 1 })
+        if (tag) builder.andWhere("tag.name = :tag", { tag })
         if (key)
-            builder.andWhere("article.title like :key", { key: `%${key}%` });
-        return builder.getMany();
+            builder.andWhere("article.title like :key", { key: `%${key}%` })
+        return builder.getMany()
     }
 
     async findOne(id: number, authed = false): Promise<Article> {
@@ -44,9 +44,9 @@ export class ArticleService {
             select: ["id", "title", "content", "open", "create", "update"],
             relations: ["comments", "tags"],
             where: { id },
-        };
-        if (!authed) options.where = { id, open: true };
-        return await this.connection.manager.findOne(Article, options);
+        }
+        if (!authed) options.where = { id, open: true }
+        return await this.connection.manager.findOne(Article, options)
     }
 
     async insertOrUpdateOne(
@@ -54,32 +54,32 @@ export class ArticleService {
         articleId = 0,
     ): Promise<number> {
         return await this.connection.transaction(async (manager) => {
-            let a: Article;
-            if (articleId > 0) a = await manager.findOne(Article, articleId);
-            else a = new Article();
-            if (dto.title) a.title = dto.title;
-            if (dto.content) a.content = dto.content;
-            if (dto.open !== undefined) a.open = dto.open;
+            let a: Article
+            if (articleId > 0) a = await manager.findOne(Article, articleId)
+            else a = new Article()
+            if (dto.title) a.title = dto.title
+            if (dto.content) a.content = dto.content
+            if (dto.open !== undefined) a.open = dto.open
             const tags: Tag[] = await this.tagService.insertMany(
                 manager,
                 dto.tags,
-            );
-            a.tags = tags;
-            const result = await manager.save(Article, a);
-            return result ? result.id : 0;
-        });
+            )
+            a.tags = tags
+            const result = await manager.save(Article, a)
+            return result ? result.id : 0
+        })
     }
 
     async deleteOne(id: number): Promise<boolean> {
-        const result = await this.connection.manager.delete(Article, id);
-        return result.affected > 0;
+        const result = await this.connection.manager.delete(Article, id)
+        return result.affected > 0
     }
 
     async count(id: number, type: number): Promise<boolean> {
-        let column: string;
-        if (type === 1) column = "read";
-        else if (type === 2) column = "liked";
-        else return false;
+        let column: string
+        if (type === 1) column = "read"
+        else if (type === 2) column = "liked"
+        else return false
         const result = await this.connection
             .createQueryBuilder()
             .update(Article)
@@ -87,8 +87,8 @@ export class ArticleService {
                 [column]: () => `${column} + 1`,
             })
             .where("id = :id", { id })
-            .execute();
-        return result.affected > 0;
+            .execute()
+        return result.affected > 0
     }
 
     async bindTag(
@@ -96,17 +96,17 @@ export class ArticleService {
         dto: ArticleBindTagDto,
         authed = true,
     ): Promise<boolean> {
-        const one = await this.findOne(articleId, authed);
-        if (!one) return false;
+        const one = await this.findOne(articleId, authed)
+        if (!one) return false
         return await this.connection.manager.transaction(async (manager) => {
-            await this.tagService.deleteMany(manager, one.tags);
+            await this.tagService.deleteMany(manager, one.tags)
             const tags: Tag[] = await this.tagService.insertMany(
                 manager,
                 dto.tags,
-            );
-            one.tags = tags;
-            await manager.save(Article, one);
-            return true;
-        });
+            )
+            one.tags = tags
+            await manager.save(Article, one)
+            return true
+        })
     }
 }

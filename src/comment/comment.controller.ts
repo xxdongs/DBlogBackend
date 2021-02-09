@@ -9,14 +9,14 @@ import {
     NotFoundException,
     Delete,
     Get,
-} from "@nestjs/common";
-import { ApiCreatedResponse } from "@nestjs/swagger";
-import { NoticeService } from "src/notice/notice.service";
-import { JwtAuthGuard } from "src/util/jtw.authguard";
-import { InsertResponse } from "src/util/ResMessage";
-import { CommentCreateDto } from "./comment.dto";
-import { Comment } from "./comment.entity";
-import { CommentService } from "./comment.service";
+} from "@nestjs/common"
+import { ApiCreatedResponse } from "@nestjs/swagger"
+import { NoticeService } from "src/notice/notice.service"
+import { JwtAuthGuard } from "src/util/jtw.authguard"
+import { InsertResponse } from "src/util/ResMessage"
+import { CommentCreateDto } from "./comment.dto"
+import { Comment } from "./comment.entity"
+import { CommentService } from "./comment.service"
 
 @Controller("comment")
 export class CommentController {
@@ -30,10 +30,10 @@ export class CommentController {
     async createComment(
         @Body() dto: CommentCreateDto,
     ): Promise<InsertResponse> {
-        const insertId = await this.commentService.insertOne(dto);
-        if (insertId === 0) throw new BadRequestException();
-        await this.noticeService.insertOne("COMMENT", `/comment/${insertId}`);
-        return new InsertResponse(insertId);
+        const insertId = await this.commentService.insertOne(dto)
+        if (insertId === 0) throw new BadRequestException()
+        await this.noticeService.insertOne("COMMENT", `/comment/${insertId}`)
+        return new InsertResponse(insertId)
     }
 
     @ApiCreatedResponse({ type: InsertResponse })
@@ -43,16 +43,16 @@ export class CommentController {
         @Request() req,
         @Param("id") id: number,
     ): Promise<Comment> {
-        const authed = req.user ? true : false;
-        const comm = await this.commentService.findOne(id, authed);
-        if (!comm) throw new NotFoundException();
-        return comm;
+        const authed = req.user ? true : false
+        const comm = await this.commentService.findOne(id, authed)
+        if (!comm) throw new NotFoundException()
+        return comm
     }
 
     @UseGuards(new JwtAuthGuard())
     @Delete(":id")
     async delComment(@Param("id") id: number) {
-        const ok = await this.commentService.deleteOne(id);
-        if (!ok) throw new NotFoundException();
+        const ok = await this.commentService.deleteOne(id)
+        if (!ok) throw new NotFoundException()
     }
 }

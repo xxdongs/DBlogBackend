@@ -1,11 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger"
+import { IsDefined } from "class-validator"
 
 export class MessageCreateDto {
     @ApiProperty()
-    contact: string;
+    contact: string
 
     @ApiProperty()
     @IsDefined()
-    content: string;
+    content: string
 }

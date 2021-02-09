@@ -1,21 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { NoticeType } from "src/util/constant";
+import { ApiProperty } from "@nestjs/swagger"
+import { NoticeType } from "src/util/constant"
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-} from "typeorm";
+} from "typeorm"
 
 @Entity()
 export class Notice {
     @ApiProperty()
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number
 
     @ApiProperty()
     @Column({ length: 16, comment: "The type of this notice." })
-    type: NoticeType;
+    type: NoticeType
 
     @ApiProperty()
     @Column({
@@ -23,16 +23,16 @@ export class Notice {
         comment:
             "The address link of this notice, article or message or comment",
     })
-    link: string;
+    link: string
 
     @ApiProperty()
     @Column({
         default: false,
         comment: "Whether the notice was read by admin.",
     })
-    read: boolean;
+    read: boolean
 
     @ApiProperty()
     @CreateDateColumn({ type: "timestamp" })
-    create: Date;
+    create: Date
 }

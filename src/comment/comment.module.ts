@@ -1,7 +1,7 @@
-import { Module } from "@nestjs/common";
-import { NoticeModule } from "src/notice/notice.module";
-import { CommentController } from "./comment.controller";
-import { CommentService } from "./comment.service";
+import { Module } from "@nestjs/common"
+import { NoticeModule } from "src/notice/notice.module"
+import { CommentController } from "./comment.controller"
+import { CommentService } from "./comment.service"
 
 @Module({
     imports: [NoticeModule],
